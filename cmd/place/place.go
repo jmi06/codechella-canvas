@@ -14,6 +14,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/rbxb/httpfilter"
 	"github.com/rbxb/place"
@@ -47,6 +48,17 @@ func init() {
 	flag.StringVar(&loadRecordPath, "loadRecord", "", "The png to load as the record.")
 	flag.StringVar(&saveRecordPath, "saveRecord", "./record.png", "The path to save the record.")
 	flag.BoolVar(&enableWL, "wl", false, "Enable whitelist.")
+}
+
+func timestampedSavePath(flagPath string) string{
+	// Get the current time in the correct format.
+	t := time.Now().Format("2006-01-02-15:04:05")
+	
+	//Get the index of the last . (start of file extension)
+	lastDot := strings.LastIndex(flagPath, ".")
+	extension := flagPath[lastDot:]
+
+	return fmt.Sprintf("%v_%v%v",flagPath[:lastDot], t, extension)
 }
 
 func main() {
@@ -90,18 +102,20 @@ func main() {
 		}
 	}
 
+
+
 	placeSv := place.NewServer(img, count, enableWL, whitelist, record)
-	defer ioutil.WriteFile(savePath, placeSv.GetImageBytes(), 0644)
+	defer ioutil.WriteFile(timestampedSavePath(savePath), placeSv.GetImageBytes(), 0644)
 	defer func() {
 		if enableWL {
-			ioutil.WriteFile(savePath, placeSv.GetRecordBytes(), 0644)
+			ioutil.WriteFile(timestampedSavePath(savePath), placeSv.GetRecordBytes(), 0644)
 		}
 	}()
 	go func() {
 		for {
-			ioutil.WriteFile(savePath, placeSv.GetImageBytes(), 0644)
+			ioutil.WriteFile(timestampedSavePath(savePath), placeSv.GetImageBytes(), 0644)
 			if enableWL {
-				ioutil.WriteFile(saveRecordPath, placeSv.GetRecordBytes(), 0644)
+				ioutil.WriteFile(timestampedSavePath(saveRecordPath), placeSv.GetRecordBytes(), 0644)
 			}
 			time.Sleep(time.Second * time.Duration(saveInterval))
 		}
