@@ -120,7 +120,6 @@ const GUI = (cvs, glWindow, place) => {
 			}
 		}, 350);
 	});
-	document.querySelector('#help-popup').style.visibility = 'hidden'
 	document.addEventListener("touchend", (ev) => {
 		touchID++;
 		let elapsed = (new Date()).getTime() - touchstartTime;
