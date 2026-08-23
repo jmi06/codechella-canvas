@@ -159,6 +159,18 @@ const GUI = (cvs, glWindow, place) => {
 
 	cvs.addEventListener("contextmenu", () => { return false; });
 
+	let hex = colorField.value.replace(/[^A-Fa-f0-9]/g, "").toUpperCase();
+	hex = hex.substring(0, 6);
+	while (hex.length < 6) {
+		hex += "0";
+	}
+	color[0] = parseInt(hex.substring(0, 2), 16);
+	color[1] = parseInt(hex.substring(2, 4), 16);
+	color[2] = parseInt(hex.substring(4, 6), 16);
+	hex = "#" + hex;
+	colorField.value = hex;
+
+
 	colorField.addEventListener("change", ev => {
 		let hex = colorField.value.replace(/[^A-Fa-f0-9]/g, "").toUpperCase();
 		hex = hex.substring(0, 6);
@@ -170,7 +182,7 @@ const GUI = (cvs, glWindow, place) => {
 		color[2] = parseInt(hex.substring(4, 6), 16);
 		hex = "#" + hex;
 		colorField.value = hex;
-		colorSwatch.style.backgroundColor = hex;
+		// colorSwatch.style.backgroundColor = hex;
 	});
 
 	// ***************************************************
@@ -186,7 +198,7 @@ const GUI = (cvs, glWindow, place) => {
 			hex += d;
 		}
 		colorField.value = hex.toUpperCase();
-		colorSwatch.style.backgroundColor = hex;
+		// colorSwatch.style.backgroundColor = hex;
 	}
 
 	const calcRandomCooldown = () => {
