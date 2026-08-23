@@ -83,6 +83,44 @@ body {
 	right: 16px;
 }
 
+#banner{
+	z-index:8000;
+	display:flex;
+	margin-top: 5px;
+	align-items: stretch;
+	justify-content: space-around;
+	flex-wrap: wrap;
+
+}
+
+#banner > *{
+	border: 1px solid black;
+	background-color:white;
+	padding: 10px;
+	font-size: 1.1rem;
+	text-align: center;
+	pointer-events: all;
+}
+
+#timer {
+	right: 50%;
+	padding: 10px;
+	font-size: 1.1rem;
+	text-align: center;
+}
+
+#time-remaining{
+	text-align:center;
+}
+
+.red{
+	background-color:#ff9898 !important; 
+}
+
+.green{
+	background-color:#98ffb2 !important;
+}
+
 .zoom-button {
 	width: 36px;
 	height: 36px;
@@ -98,13 +136,11 @@ body {
 	user-select: none;
 }
 
+
+
 #help-button {
-	position: absolute;
-	top: 10px;
-	left: 10px;
 	z-index: 900;
 	width: 60px;
-	padding: 8px;
 	background-color: #ffffff;
 	border: 1px solid #000;
 	cursor: pointer;

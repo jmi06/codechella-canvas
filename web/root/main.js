@@ -18,9 +18,15 @@ const GUI = (cvs, glWindow, place) => {
 	let lastMovePos = { x: 0, y: 0 };
 	let lastScalingDist = 0;
 	let touchstartTime;
+	const MIN_COOLDOWN = 2000; 
+	const MAX_COOLDOWN = 30000; 
 
 	const colorField = document.querySelector("#color-field");
 	const colorSwatch = document.querySelector("#color-swatch");
+
+	if (!localStorage.getItem("place_again")) {
+		localStorage.setItem("place_again", 0);
+	}
 
 	// ***************************************************
 	// ***************************************************
@@ -114,7 +120,7 @@ const GUI = (cvs, glWindow, place) => {
 			}
 		}, 350);
 	});
-
+	document.querySelector('#help-popup').style.visibility = 'hidden'
 	document.addEventListener("touchend", (ev) => {
 		touchID++;
 		let elapsed = (new Date()).getTime() - touchstartTime;
@@ -183,13 +189,33 @@ const GUI = (cvs, glWindow, place) => {
 		colorSwatch.style.backgroundColor = hex;
 	}
 
+	const calcRandomCooldown = () => {
+		return Math.ceil(Math.random() * (MAX_COOLDOWN - MIN_COOLDOWN) + MIN_COOLDOWN);
+	}
+
+	const getRemainingCooldown = () => {
+		return parseInt(localStorage.getItem("place_again") - Date.now())
+	};
+
 	const drawPixel = (pos, color) => {
+		let remainingCooldown = getRemainingCooldown()
+
+		if (remainingCooldown > 0) {
+			// Don't let the user draw
+			return false;
+		}
+
 		pos = glWindow.click(pos);
 		if (pos) {
 			const oldColor = glWindow.getColor(pos);
 			for (let i = 0; i < oldColor.length; i++) {
 				if (oldColor[i] != color[i]) {
 					place.setPixel(pos.x, pos.y, color);
+
+					const cooldown = calcRandomCooldown()
+					const resumeTime = Date.now() + cooldown;
+					localStorage.setItem("place_again", resumeTime.toString());
+
 					return true;
 				}
 			}
@@ -208,4 +234,69 @@ const GUI = (cvs, glWindow, place) => {
 		glWindow.setZoom(zoom / factor);
 		glWindow.draw();
 	}
+
+	const updateTimer = () => {
+		const timeContainer = document.getElementById('timer');
+		const timer = document.getElementById("time-remaining");
+		timer.innerText = getRemainingCooldown() > 0 ? Math.ceil(getRemainingCooldown() / 1000) : 0;
+
+		if (getRemainingCooldown() > 0) {
+			timeContainer.classList.add('red')
+			timeContainer.classList.remove('green')
+		} else {
+			timeContainer.classList.add('green')
+			timeContainer.classList.remove('red')
+		}
+	}
+
+
+	async function getConnectedUsers() {
+		try {
+			const res = await fetch('/stat');
+			const count = await res.text();
+			document.getElementById("online-count").innerText = count
+			return parseInt(count);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	const timeTilEnd = () => {
+		let timeStr;
+		const end = Math.floor(Date.UTC(2026, 8, 11, 23, 59, 59) / 1000);
+		const deltaTime = end - Math.floor(Date.now() / 1000);
+
+		if (deltaTime >= 86400) { //More than a day remaining
+			timeStr = `${Math.floor(deltaTime / 86400)} Days`
+		} else if (deltaTime >= 3600) { //Less than a day, but more than an hour
+			timeStr = `${Math.floor(deltaTime / 3600)} Hours`
+		} else if (deltaTime >= 60) { //Less than an hour, but more than a minute
+			timeStr = `${Math.floor(deltaTime / 60)} Minutes`
+		} else if (deltaTime < 60 > 0) {
+			timeStr = `${deltaTime} Seconds`
+		} else {
+			timeStr = '0'
+		}
+
+		document.getElementById('time-til-close').innerText = timeStr
+
+	}
+
+
+	updateTimer()
+	getConnectedUsers()
+	timeTilEnd()
+
+	setInterval(() => {
+		updateTimer()
+	}, 500);
+
+	setInterval(() => {
+		getConnectedUsers()
+	}, 20000);
+
+	setInterval(() => {
+		timeTilEnd()
+	}, 1000);
+
 }
