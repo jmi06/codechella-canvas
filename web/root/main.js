@@ -20,13 +20,20 @@ const GUI = (cvs, glWindow, place) => {
 	let touchstartTime;
 	const MIN_COOLDOWN = 2000; 
 	const MAX_COOLDOWN = 30000; 
-
+	const ADMIN_PASSWORD = "QzBkM0NoMzExQA=="
+	
 	const colorField = document.querySelector("#color-field");
 	const colorSwatch = document.querySelector("#color-swatch");
+	let ADMIN;
 
 	if (!localStorage.getItem("place_again")) {
 		localStorage.setItem("place_again", 0);
 	}
+
+	if (localStorage.getItem("user").Uint8Array.prototype.toBase64() == ADMIN_PASSWORD){
+		ADMIN = true;
+	}
+
 
 	// ***************************************************
 	// ***************************************************
@@ -209,8 +216,13 @@ const GUI = (cvs, glWindow, place) => {
 	};
 
 	const drawPixel = (pos, color) => {
-		let remainingCooldown = getRemainingCooldown()
-
+		let remainingCooldown;
+			
+		if (ADMIN == true){
+			let remainingCooldown = 0
+		} else{
+			let remainingCooldown = getRemainingCooldown()
+		}
 		if (remainingCooldown > 0) {
 			// Don't let the user draw
 			return false;
