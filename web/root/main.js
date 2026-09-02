@@ -219,9 +219,9 @@ const GUI = (cvs, glWindow, place) => {
 		let remainingCooldown;
 			
 		if (ADMIN == true){
-			let remainingCooldown = 0
+			remainingCooldown = 0
 		} else{
-			let remainingCooldown = getRemainingCooldown()
+			remainingCooldown = getRemainingCooldown()
 		}
 		if (remainingCooldown > 0) {
 			// Don't let the user draw
@@ -238,6 +238,10 @@ const GUI = (cvs, glWindow, place) => {
 					const cooldown = calcRandomCooldown()
 					const resumeTime = Date.now() + cooldown;
 					localStorage.setItem("place_again", resumeTime.toString());
+
+					if(ADMIN){
+						localStorage.setItem("place_again", Date.now().toString())
+					}
 
 					return true;
 				}
