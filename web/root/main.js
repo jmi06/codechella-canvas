@@ -19,7 +19,7 @@ const GUI = (cvs, glWindow, place) => {
 	let lastScalingDist = 0;
 	let touchstartTime;
 	const MIN_COOLDOWN = 2000; 
-	const MAX_COOLDOWN = 30000; 
+	const MAX_COOLDOWN = 10000; 
 	const ADMIN_PASSWORD = "C0d3ch311@"
 	
 	const colorField = document.querySelector("#color-field");
