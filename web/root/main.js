@@ -218,15 +218,18 @@ const GUI = (cvs, glWindow, place) => {
 	const drawPixel = (pos, color) => {
 		let remainingCooldown;
 			
+		
+		remainingCooldown = getRemainingCooldown()
+		
 		if (ADMIN == true){
 			remainingCooldown = 0
-		} else{
-			remainingCooldown = getRemainingCooldown()
 		}
+
 		if (remainingCooldown > 0) {
 			// Don't let the user draw
 			return false;
 		}
+
 
 		pos = glWindow.click(pos);
 		if (pos) {
