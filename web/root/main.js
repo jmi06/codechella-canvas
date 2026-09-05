@@ -20,7 +20,7 @@ const GUI = (cvs, glWindow, place) => {
 	let touchstartTime;
 	const MIN_COOLDOWN = 2000; 
 	const MAX_COOLDOWN = 30000; 
-	const ADMIN_PASSWORD = "QzBkM0NoMzExQA=="
+	const ADMIN_PASSWORD = "C0d3ch311@"
 	
 	const colorField = document.querySelector("#color-field");
 	const colorSwatch = document.querySelector("#color-swatch");
@@ -30,7 +30,7 @@ const GUI = (cvs, glWindow, place) => {
 		localStorage.setItem("place_again", 0);
 	}
 
-	if (localStorage.getItem("user").Uint8Array.prototype.toBase64() == ADMIN_PASSWORD){
+	if (localStorage.getItem("user") == ADMIN_PASSWORD){
 		ADMIN = true;
 	}
 
